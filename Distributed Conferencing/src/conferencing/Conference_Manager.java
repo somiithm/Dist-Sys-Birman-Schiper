@@ -83,12 +83,12 @@ public class Conference_Manager {
                     System.out.println("Current Key = " + entry.getKey());
                     Socket soc = new Socket(entry.getValue(), port);
                     ObjectOutputStream oos = new ObjectOutputStream(soc.getOutputStream());
-//                    Date date = new Date();
-//                    Calendar cal = Calendar.getInstance();
-//                    cal.setTime(date);
-//                    int hours = cal.get(Calendar.HOUR_OF_DAY);
-//                    int min = cal.get(Calendar.MINUTE);
-                    oos.writeUTF(user + ": " + msg);
+                    Date date = new Date();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(date);
+                    int hours = cal.get(Calendar.HOUR_OF_DAY);
+                    int min = cal.get(Calendar.MINUTE);
+                    oos.writeUTF("M" + hours + ":" + min + ":>" + user + ": " + msg);
                     oos.flush();
                     oos.writeObject(vec_clock);
                     oos.flush();

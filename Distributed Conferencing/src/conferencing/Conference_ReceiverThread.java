@@ -12,8 +12,6 @@ import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -94,17 +92,11 @@ public class Conference_ReceiverThread extends Thread {
                     flag = false;
                     conf.vec_clock = time_stamp;
                     System.out.println(conf.vec_clock);
-                    Date date = new Date();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(date);
-                    int hours = cal.get(Calendar.HOUR_OF_DAY);
-                    int min = cal.get(Calendar.MINUTE);
-                    msg = Integer.toString(hours)+":"+Integer.toString(min)+":>"+msg;
                     conf.ui.conf_text_area.append(msg + "\n");
                     break;
                 } else {
 
-                    n = msg.substring(0, msg.lastIndexOf(":"));
+                    n = msg.substring(msg.indexOf(">") + 1, msg.lastIndexOf(":"));
                     System.out.println(n + "  " + conf.user);
                     if (n.equals(conf.user)) {
                         System.out.println("in my own recieve" + conf.vec_clock + " " + conf.vec_clock.get(n) + " " + time_stamp.get(n));
@@ -133,7 +125,6 @@ public class Conference_ReceiverThread extends Thread {
                             break;
                         }
                     } else {
-                        System.out.println(conf.vec_clock +  " "+ time_stamp + " " + n);
                         if (conf.vec_clock.get(n) == time_stamp.get(n) - 1) {
                             for (Map.Entry<String, Integer> entry : conf.vec_clock.entrySet()) {
                                 if (!n.equals(entry.getKey())) {
@@ -162,12 +153,6 @@ public class Conference_ReceiverThread extends Thread {
                 }
                 if (f) {
                     //check if any messages can be delivered                                
-                    Date date = new Date();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(date);
-                    int hours = cal.get(Calendar.HOUR_OF_DAY);
-                    int min = cal.get(Calendar.MINUTE);
-                    msg = Integer.toString(hours)+":"+Integer.toString(min)+":>"+msg;
                     conf.ui.conf_text_area.append(msg + "\n");
                     System.out.println(conf.vec_clock);
                     if (!n.equals(conf.user)) {
@@ -189,7 +174,7 @@ public class Conference_ReceiverThread extends Thread {
             f = true;
             clock = messages.get(i).clock;
             msg = messages.get(i).msg;
-            String n = msg.substring(0, msg.lastIndexOf(":"));
+            String n = msg.substring(msg.indexOf(">") + 1, msg.lastIndexOf(":"));
             if (conf.vec_clock.get(n) == clock.get(n) - 1) {
                 for (Map.Entry<String, Integer> entry : conf.vec_clock.entrySet()) {
                     if (!n.equals(entry.getKey())) {
@@ -206,12 +191,6 @@ public class Conference_ReceiverThread extends Thread {
                     if (!n.equals(conf.user)) {
                         conf.vec_clock.put(n, conf.vec_clock.get(n) + 1);
                     }
-                    Date date = new Date();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(date);
-                    int hours = cal.get(Calendar.HOUR_OF_DAY);
-                    int min = cal.get(Calendar.MINUTE);
-                    msg = Integer.toString(hours)+":"+Integer.toString(min)+":>"+msg;
                     conf.ui.conf_text_area.append(msg + "\n");
                     System.out.println(conf.vec_clock);
                     messages.remove(i);
