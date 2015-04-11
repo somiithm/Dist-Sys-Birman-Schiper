@@ -45,12 +45,12 @@ public class Conference_ReceiverThread extends Thread {
         switch (message.charAt(0)) {
             case 'A':
                 this.counter++;
-				// acknowledgement received join
+                // acknowledgement received join
                 // send the list of peers to the new guy
-                oos.writeObject(conf.peers);
-//                                name = message.substring(1);
-//                                conf.vec_clock.put(name,0);
-                oos.flush();
+                synchronized (conf.peers) {
+                    oos.writeObject(conf.peers);
+                    oos.flush();
+                }
                 break;
             case 'R':
                 this.counter++;
@@ -61,15 +61,25 @@ public class Conference_ReceiverThread extends Thread {
             case 'P':
                 // Add peer request
                 name = message.substring(1);
-                conf.peers.put(name, (Inet4Address) sock.getInetAddress());
-                conf.update_peers_list();
-                conf.vec_clock.put(name, 0);
+                synchronized (conf.peers) {
+                    conf.peers.put(name, (Inet4Address) sock.getInetAddress());
+                    conf.update_peers_list();
+                    conf.vec_clock.put(name, 0);
+                }
+                break;
+
+            case 'V':
+                oos.writeObject(conf.vec_clock);
+                oos.flush();
                 break;
             case 'E':
                 // Exit peer request
                 name = message.substring(1);
-                conf.peers.remove(name);
-                conf.update_peers_list();
+                synchronized (conf.peers) {
+                    conf.peers.remove(name);
+                    conf.update_peers_list();
+                     conf.vec_clock.remove(name);
+                }
                 break;
             case 'M':
                 //display message
@@ -90,7 +100,7 @@ public class Conference_ReceiverThread extends Thread {
                     System.out.println(n + "  " + conf.user);
                     if (n.equals(conf.user)) {
                         System.out.println("in my own recieve" + conf.vec_clock + " " + conf.vec_clock.get(n) + " " + time_stamp.get(n));
-                        if ( (int)conf.vec_clock.get(n) == (int)time_stamp.get(n)) {
+                        if ((int) conf.vec_clock.get(n) == (int) time_stamp.get(n)) {
                             for (Map.Entry<String, Integer> entry : conf.vec_clock.entrySet()) {
                                 if (!n.equals(entry.getKey())) {
                                     if (entry.getValue() >= time_stamp.get(entry.getKey())) {
