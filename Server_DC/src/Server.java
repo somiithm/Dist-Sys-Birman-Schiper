@@ -130,7 +130,9 @@ public class Server {
 				if(conf_members.get(ConfName).isEmpty())
 				{
 					// Delete Conference From list
-					
+					System.out.println("No people left here!! Deleting Conference");
+					conf_list.remove(ConfName);
+					conf_members.remove(ConfName);
 				}
 				break;
 			case 'J':		// Get the conference List
@@ -146,7 +148,11 @@ public class Server {
                 oos.flush();
                 oos.writeObject(this.conf_list);
                 oos.flush();
-                break;             
+                break;
+			case 'D':
+                UserName = input.substring(1);
+                mapping.remove(UserName);
+                break;
         }                
         
     }    

@@ -33,7 +33,7 @@ public class DC_UI extends javax.swing.JFrame {
     public static Font ui_font;
     public static int req_port = 8000;
 //	public String server_ip = "10.138.52.215";
-    public static String server_ip = "10.64.42.79";
+    public static String server_ip = "10.132.141.216";
     public static int server_port = 8888;
     public String nick_error1;
     public String nick_error2;
